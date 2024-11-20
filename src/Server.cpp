@@ -432,19 +432,17 @@ Server::Server(const std::string &serviceName, const std::string &advertisingNam
 	.gattServiceEnd()
 
 	.gattServiceBegin("ball", "5a6ae07a-50f0-44c1-b22c-26da0934807a")
-		.gattCharacteristicBegin("Speed", "64b4eb59-4325-4226-9ba6-74314b5760f2", {"read", "notify"})
+		.gattCharacteristicBegin("pitch", "64b4eb59-4325-4226-9ba6-74314b5760f2", {"read", "notify"})
 			// Standard characteristic "ReadValue" method call
 			.onReadValue(CHARACTERISTIC_METHOD_CALLBACK_LAMBDA
 			{
-				const char *ballSpeed = self.getDataPointer<const char *>("ball/speed", "");
-				self.methodReturnValue(pInvocation, ballSpeed, true);
-
+				const char *pTextString = self.getDataPointer<const char *>("ball/pitch", "");
+				self.methodReturnValue(pInvocation, pTextString, true);
 			})
 			.onUpdatedValue(CHARACTERISTIC_UPDATED_VALUE_CALLBACK_LAMBDA
 			{
-				uint8_t ballSpeed = self.getDataValue<uint8_t>("ball/speed", 0);
-				self.sendChangeNotificationValue(pConnection, ballSpeed);
-
+				const char *pTextString = self.getDataPointer<const char *>("ball/pitch", "");
+				self.sendChangeNotificationValue(pConnection, pTextString);
 				return true;
 
 			})
